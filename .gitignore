@@ -1,4 +1,6 @@
 *.MOV
+media/raw/
 partners/kassir-src/
 .DS_Store
 Thumbs.db
+_organize.py

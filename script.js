@@ -14,8 +14,8 @@ if (heroVideo) {
     ? heroVideo.dataset.mobileSrc
     : heroVideo.dataset.desktopSrc;
   heroVideo.poster = isMobile
-    ? "hero-poster-mobile.jpg?v=20260919"
-    : "hero-poster.jpg?v=20260919";
+    ? "media/video/hero-poster-mobile.jpg?v=20260919b"
+    : "media/video/hero-poster.jpg?v=20260919b";
 
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     heroVideo.removeAttribute("autoplay");
@@ -65,6 +65,11 @@ const LEAD_COPY = {
     kicker: "VIP-ложа",
     title: "Запрос на VIP-ложу",
     hint: "До 12 гостей. Мы направим предложение по билетам или выкупу пространства.",
+  },
+  gift: {
+    kicker: "Подарочное оформление",
+    title: "Билет уже куплен",
+    hint: "Напишите почту, телефон, повод, имя и пол человека, кому адресован билет. Варианты оформления пришлём на почту.",
   },
 };
 
@@ -184,6 +189,10 @@ function openLead(kind) {
     if (comment) comment.required = true;
     if (comment) comment.placeholder = "Количество гостей, даты, пожелания";
     if (commentLabel) commentLabel.textContent = "Комментарий";
+  } else if (kind === "gift") {
+    if (comment) comment.required = true;
+    if (comment) comment.placeholder = "Повод, имя и пол человека. Если есть — номер билета";
+    if (commentLabel) commentLabel.textContent = "Повод и кому адресован билет";
   } else {
     if (comment) comment.required = false;
     if (comment) comment.placeholder = "Коротко о запросе";
@@ -250,6 +259,12 @@ form?.addEventListener("submit", async (e) => {
     statusEl.hidden = false;
     statusEl.className = "lead-status is-err";
     statusEl.textContent = "Для VIP-ложи напишите комментарий: гости, формат, пожелания.";
+    return;
+  }
+  if (payload.kind === "gift" && !payload.comment) {
+    statusEl.hidden = false;
+    statusEl.className = "lead-status is-err";
+    statusEl.textContent = "Напишите повод, имя и пол человека, кому адресован билет.";
     return;
   }
   submitBtn.disabled = true;
