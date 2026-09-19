@@ -17,6 +17,7 @@
     </a>
     <nav class="desktop-nav" aria-label="Основная навигация">
       <a href="#about">О спектакле</a>
+      <a href="#artists">Артисты</a>
       <a href="#cast">Создатели</a>
       <a href="#details">Информация</a>
       <a href="#partners">Партнёрам</a>
@@ -33,7 +34,7 @@
   <main id="top">
     <section class="hero">
       <div class="hero__media">
-        <video class="hero__video" src="hero-video.mp4" autoplay muted loop playsinline preload="auto" poster="hero-poster.jpg" data-desktop-src="hero-video.mp4" data-mobile-src="hero-video-mobile.mp4" aria-hidden="true"></video>
+        <video class="hero__video" src="hero-video.mp4?v=20260919" autoplay muted loop playsinline preload="auto" poster="hero-poster.jpg?v=20260919" data-desktop-src="hero-video.mp4?v=20260919" data-mobile-src="hero-video-mobile.mp4?v=20260919" aria-hidden="true"></video>
       </div>
       <div class="hero__veil" aria-hidden="true"></div>
       <div class="hero__content">
@@ -56,17 +57,25 @@
     </section>
 
     <section class="statement" id="about">
-      <p class="eyebrow eyebrow--red reveal">О спектакле</p>
+      <div class="statement__intro reveal">
+        <p class="eyebrow eyebrow--red">О спектакле</p>
+        <div class="statement__mood">
+          <p>Чувственный. Эмоциональный. Душевный.</p>
+          <p>Страстный. Волнительный.</p>
+          <p class="statement__mood-title">Спектакль о любви</p>
+        </div>
+      </div>
+      <div class="statement__side" aria-hidden="true"></div>
       <h2 class="reveal">Любовь не бывает<br><em>невиновной.</em></h2>
       <div class="statement__copy reveal">
-        <p>«Виновна ли?» — шоу-спектакль на стыке театра, музыки и танца. На одной сцене — артисты pole dance, frame up strip, воздушной гимнастики, мюзиклов и эстрады.</p>
-        <p>В центре — история любви, которая становится предметом судебного разбирательства. Чувства, страсть и моральные ценности обретают голос, движение и форму.</p>
+        <p>«Виновна ли?» — шоу-спектакль на стыке театра, музыки и танца. На одной сцене — звезды pole dance, frame up и воздушной гимнастики, исполнители мюзиклов и эстрады, международные спортсмены и чемпионы, участники популярных телевизионных шоу.</p>
+        <p>В центре — сама любовь, которая становится предметом судебного разбирательства. Чувства, страсть и моральные ценности обретают голос, движение и форму.</p>
       </div>
-      <div class="statement__note reveal"><span>01</span> Тема любви<br>вечна.</div>
+      <div class="statement__note reveal">Тема любви<br>вечна.</div>
     </section>
 
-    <section class="marquee" aria-label="Жанры спектакля">
-      <div><span>театр</span><i>✦</i><span>музыка</span><i>✦</i><span>танец</span><i>✦</i><span>цирк</span><i>✦</i><span>театр</span><i>✦</i><span>музыка</span><i>✦</i></div>
+    <section class="marquee" aria-label="Жанр спектакля">
+      <div><span>танцевально-акробатический шоу спектакль</span><i>✦</i><span>танцевально-акробатический шоу спектакль</span><i>✦</i></div>
     </section>
 
     <section class="scene">
@@ -134,7 +143,7 @@
           <p>Режиссёр, актёр, певец</p>
         </article>
       </div>
-      <div class="full-cast">
+      <div class="full-cast" id="artists">
         <div class="team-intro">
           <p class="eyebrow">На сцене</p>
           <h3>Команда<br><em>проекта</em></h3>
@@ -147,7 +156,7 @@
           <div class="team-panel__copy">
             <p class="eyebrow">Команда Кристины Бродецкой</p>
             <h3>PROBRO <em>TEAM</em></h3>
-            <p class="team-panel__description">Многократные чемпионы России в категории PE команды. Участники «Новых танцев».</p>
+            <p class="team-panel__description">Многократные чемпионы России в категории команды. Участники «Новых танцев».</p>
             <p class="team-panel__names">Евдокимова Анастасия · Филимонова Екатерина · Бессарабова Светлана · Бондаренко Алёна · Шапченко Анастасия · Парунова Алина · Прохоренко Софья · Шаламова Мария · Логачева Елена · Пиденко Екатерина · Плескала Елизавета · Курилова Алина · Прохоренко Елизавета</p>
           </div>
         </article>
@@ -188,8 +197,25 @@
     <section class="credits">
       <p class="eyebrow reveal">Хореографы и стиль</p>
       <div class="credits__list">
-        <article class="reveal"><span>Хореографы</span><h3>Кристина Бродецкая · Алина Курилова · Елизавета Прохоренко · Полина Осипова · Алина Kosh</h3></article>
-        <article class="reveal"><span>Стиль</span><h3>Сюзанна Барс · Кристина Пануца · Кристина Завьялова · Ольга Аникеева</h3></article>
+        <article class="reveal">
+          <span>Хореографы</span>
+          <h3>
+            <span class="credits-name">Кристина Бродецкая</span>
+            <span class="credits-name">Алина Курилова</span>
+            <span class="credits-name">Елизавета Прохоренко</span>
+            <span class="credits-name">Полина Осипова</span>
+            <span class="credits-name">Алина Kosh</span>
+          </h3>
+        </article>
+        <article class="reveal">
+          <span>Стиль</span>
+          <h3>
+            <span class="credits-name">Сюзанна Барс</span>
+            <span class="credits-name">Кристина Пануца</span>
+            <span class="credits-name">Кристина Завьялова</span>
+            <span class="credits-name">Ольга Аникеева</span>
+          </h3>
+        </article>
       </div>
     </section>
 
@@ -230,19 +256,21 @@
           <button class="button" type="button" data-lead="coproduction">Обсудить сопродюсирование</button>
         </article>
         <article class="join-card reveal">
-          <p class="eyebrow">Есть идея?</p>
+          <p class="eyebrow">Информационная поддержка</p>
           <h3>Связаться</h3>
-          <p>Есть своя идея? Давайте создадим что-то вместе.</p>
-          <button class="button" type="button" data-lead="contact">Связаться с нами</button>
+          <p>Публикации, рекомендации, репосты, медиапартнёрство и помощь в распространении информации о спектакле.</p>
+          <button class="button" type="button" data-lead="info">Связаться</button>
         </article>
       </div>
 
-      <article class="support reveal">
+      <article class="support reveal" id="support">
         <p class="eyebrow eyebrow--red">Поддержать проект</p>
         <h3>Финансово или информационно</h3>
-        <p>Поддержать «Виновна ли?» можно финансово или информационно. Любой вклад помогает нам создавать новые показы и развивать проект.</p>
-        <p>В знак благодарности за поддержку мы направим вам памятную благодарность в digital-формате, а при более крупном вкладе — мерч «Виновна ли?» или другой памятный подарок от проекта.</p>
-        <p>Информационная поддержка — публикации, рекомендации, репосты, медиапартнёрство и помощь в распространении информации о спектакле.</p>
+        <div class="support__legal">
+          <p>Если вам близок наш спектакль и вы хотите помочь его развитию, вы можете оказать проекту добровольную безвозмездную финансовую поддержку.</p>
+          <p>Размер поддержки вы определяете самостоятельно.</p>
+          <p>Финансовая поддержка является добровольной и безвозмездной, не является оплатой билета, товара, работы или услуги и не предполагает предоставления встречного вознаграждения со стороны организатора.</p>
+        </div>
         <div class="support__amounts" role="group" aria-label="Сумма поддержки">
           <button type="button" class="amount-chip is-active" data-amount="2000">2 000 ₽</button>
           <button type="button" class="amount-chip" data-amount="5000">5 000 ₽</button>
@@ -253,7 +281,21 @@
             <input type="number" id="support-other" min="500" step="100" inputmode="numeric" placeholder="500">
           </label>
         </div>
-        <button class="button" type="button" data-lead="support">Поддержать проект</button>
+        <p class="support__picked" id="support-picked">Сумма поддержки: 2 000 ₽</p>
+        <label class="support-email">
+          <span>Почта</span>
+          <input type="email" id="support-email" autocomplete="email" placeholder="name@email.com">
+        </label>
+        <label class="consent-check">
+          <input type="checkbox" id="support-terms-consent">
+          <span>Согласен с <a href="support-terms.html">условиями финансовой поддержки</a></span>
+        </label>
+        <label class="consent-check">
+          <input type="checkbox" id="support-pdn-consent">
+          <span>Согласен на <a href="privacy.html">обработку персональных данных</a></span>
+        </label>
+        <button class="button" type="button" id="support-pay">Поддержать проект</button>
+        <p class="lead-status" id="support-status" hidden></p>
       </article>
 
       <article class="vip-note reveal">
@@ -276,12 +318,26 @@
         </a>
       </div>
     </section>
+
+    <section class="creators-projects" aria-label="От создателей спектакля">
+      <p class="eyebrow reveal">От создателей спектакля</p>
+      <div class="creators-projects__row reveal">
+        <a href="https://probrodance.com" target="_blank" rel="noopener noreferrer">Probro школа танцев</a>
+        <a href="https://krisbro.ru/" target="_blank" rel="noopener noreferrer">Магазин одежды</a>
+        <a href="https://чемпионат-тень.рф/" target="_blank" rel="noopener noreferrer">Чемпионат Тень</a>
+      </div>
+    </section>
   </main>
 
   <footer>
     <div class="brand brand--footer"><span>Виновна</span><i>ли?</i></div>
     <div><p>театр «Золотое Кольцо»<br>Тимирязевская ул., 17, Москва</p></div>
-    <div><a href="tel:+79670594812">+7 967 059 4812</a><br><a href="https://t.me/kris_brodetskaya" target="_blank" rel="noopener">Telegram ↗</a></div>
+    <div>
+      <a href="tel:+79670594812">+7 967 059 4812</a><br>
+      <a href="https://www.instagram.com/vinovna_li_show/" target="_blank" rel="noopener">Instagram @vinovna_li_show ↗</a><br>
+      <a href="https://t.me/vinovna_li_show" target="_blank" rel="noopener">Telegram @vinovna_li_show ↗</a>
+      <p class="meta-disclaimer">*Instagram — продукт Meta, деятельность которой запрещена на территории РФ.</p>
+    </div>
     <small>© 2026 «Виновна ли?»<br>ИП Бродецкая · ИНН 701742111950</small>
   </footer>
   <div class="lead-backdrop" id="lead-modal" hidden>
@@ -300,6 +356,10 @@
         <label><span>Telegram</span><input type="text" name="telegram" required placeholder="@username" autocomplete="off"></label>
         <label id="lead-comment-wrap"><span id="lead-comment-label">Комментарий</span><textarea name="comment" rows="3" placeholder="Коротко о запросе"></textarea></label>
         <p class="lead-amount-note" id="lead-amount-note" hidden></p>
+        <label class="consent-check">
+          <input type="checkbox" name="privacyConsent" id="lead-privacy" required>
+          <span>Согласен на <a href="privacy.html" target="_blank" rel="noopener">обработку персональных данных</a></span>
+        </label>
         <button class="button" type="submit" id="lead-submit">Отправить</button>
         <p class="lead-status" id="lead-status" hidden></p>
       </form>

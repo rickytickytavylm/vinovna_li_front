@@ -14,8 +14,8 @@ if (heroVideo) {
     ? heroVideo.dataset.mobileSrc
     : heroVideo.dataset.desktopSrc;
   heroVideo.poster = isMobile
-    ? "hero-poster-mobile.jpg"
-    : "hero-poster.jpg";
+    ? "hero-poster-mobile.jpg?v=20260919"
+    : "hero-poster.jpg?v=20260919";
 
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     heroVideo.removeAttribute("autoplay");
@@ -53,13 +53,13 @@ const LEAD_COPY = {
   },
   contact: {
     kicker: "Связаться",
-    title: "Есть идея?",
-    hint: "Напишите, что хотите сделать вместе.",
+    title: "Связаться",
+    hint: "Напишите, чем хотите помочь проекту.",
   },
-  support: {
-    kicker: "Поддержать проект",
-    title: "Поддержать «Виновна ли?»",
-    hint: "Это заявка, не мгновенная оплата. Мы свяжемся и направим способ перевода.",
+  info: {
+    kicker: "Информационная поддержка",
+    title: "Связаться",
+    hint: "Расскажите, чем можете помочь с публикациями и распространением.",
   },
   vip: {
     kicker: "VIP-ложа",
@@ -76,6 +76,12 @@ const amountNote = document.getElementById("lead-amount-note");
 const statusEl = document.getElementById("lead-status");
 const submitBtn = document.getElementById("lead-submit");
 const otherAmount = document.getElementById("support-other");
+const supportPicked = document.getElementById("support-picked");
+const supportEmail = document.getElementById("support-email");
+const supportPayBtn = document.getElementById("support-pay");
+const supportStatus = document.getElementById("support-status");
+const supportTerms = document.getElementById("support-terms-consent");
+const supportPdn = document.getElementById("support-pdn-consent");
 const API_BASE = (window.SHADOW_CONFIG && window.SHADOW_CONFIG.API_BASE) || "";
 
 function selectedSupportAmount() {
@@ -85,16 +91,84 @@ function selectedSupportAmount() {
   return Number(active?.dataset.amount) || 2000;
 }
 
+function refreshSupportAmount() {
+  const amt = selectedSupportAmount();
+  if (supportPicked) {
+    supportPicked.textContent = `Сумма поддержки: ${amt.toLocaleString("ru-RU")} ₽`;
+  }
+  return amt;
+}
+
 document.querySelectorAll(".amount-chip").forEach((chip) => {
   chip.addEventListener("click", () => {
     document.querySelectorAll(".amount-chip").forEach((c) => c.classList.remove("is-active"));
     chip.classList.add("is-active");
     if (otherAmount) otherAmount.value = "";
+    refreshSupportAmount();
   });
 });
 otherAmount?.addEventListener("input", () => {
   if (Number(otherAmount.value) >= 500) {
     document.querySelectorAll(".amount-chip").forEach((c) => c.classList.remove("is-active"));
+  }
+  refreshSupportAmount();
+});
+refreshSupportAmount();
+
+function setSupportStatus(ok, text) {
+  if (!supportStatus) return;
+  supportStatus.hidden = false;
+  supportStatus.className = ok ? "lead-status is-ok" : "lead-status is-err";
+  supportStatus.textContent = text;
+}
+
+if (new URLSearchParams(location.search).get("support") === "ok") {
+  setSupportStatus(true, "Если оплата прошла, спасибо за поддержку проекта.");
+}
+
+supportPayBtn?.addEventListener("click", async () => {
+  const amount = refreshSupportAmount();
+  const email = (supportEmail?.value || "").trim();
+  if (amount < 500) {
+    setSupportStatus(false, "Сумма поддержки — от 500 ₽.");
+    return;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    setSupportStatus(false, "Укажите почту для чека.");
+    return;
+  }
+  if (!supportTerms?.checked) {
+    setSupportStatus(false, "Подтвердите согласие с условиями финансовой поддержки.");
+    return;
+  }
+  if (!supportPdn?.checked) {
+    setSupportStatus(false, "Подтвердите согласие на обработку персональных данных.");
+    return;
+  }
+  supportPayBtn.disabled = true;
+  setSupportStatus(true, "Открываем оплату…");
+  try {
+    const returnUrl = new URL(location.href);
+    returnUrl.searchParams.set("support", "ok");
+    returnUrl.hash = "partners";
+    const res = await fetch(`${API_BASE}/api/show-support/create`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email,
+        amount,
+        termsConsent: true,
+        privacyConsent: true,
+        returnUrl: returnUrl.toString(),
+      }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || "Не удалось создать платёж");
+    if (!data.confirmationUrl) throw new Error("ЮKassa не вернула ссылку на оплату");
+    location.href = data.confirmationUrl;
+  } catch (err) {
+    setSupportStatus(false, err.message || "Не удалось открыть оплату. Попробуйте позже.");
+    supportPayBtn.disabled = false;
   }
 });
 
@@ -115,15 +189,8 @@ function openLead(kind) {
     if (comment) comment.placeholder = "Коротко о запросе";
     if (commentLabel) commentLabel.textContent = "Комментарий";
   }
-  if (kind === "support") {
-    const amt = selectedSupportAmount();
-    amountInput.value = String(amt);
-    amountNote.hidden = false;
-    amountNote.textContent = `Сумма поддержки: ${amt.toLocaleString("ru-RU")} ₽`;
-  } else {
-    amountInput.value = "";
-    amountNote.hidden = true;
-  }
+  amountInput.value = "";
+  amountNote.hidden = true;
   statusEl.hidden = true;
   modal.hidden = false;
   document.body.style.overflow = "hidden";
@@ -164,8 +231,8 @@ form?.addEventListener("submit", async (e) => {
     phone: form.phone.value.trim(),
     telegram: form.telegram.value.trim(),
     comment: form.comment.value.trim(),
-    amount: kindInput.value === "support" ? selectedSupportAmount() : 0,
     website: form.website.value,
+    privacyConsent: Boolean(form.privacyConsent?.checked),
   };
   if (!payload.fullName || !payload.email || !payload.phone || !payload.telegram) {
     statusEl.hidden = false;
@@ -173,16 +240,16 @@ form?.addEventListener("submit", async (e) => {
     statusEl.textContent = "Заполните имя, почту, телефон и Telegram.";
     return;
   }
+  if (!payload.privacyConsent) {
+    statusEl.hidden = false;
+    statusEl.className = "lead-status is-err";
+    statusEl.textContent = "Нужно согласие на обработку персональных данных.";
+    return;
+  }
   if (payload.kind === "vip" && !payload.comment) {
     statusEl.hidden = false;
     statusEl.className = "lead-status is-err";
     statusEl.textContent = "Для VIP-ложи напишите комментарий: гости, формат, пожелания.";
-    return;
-  }
-  if (payload.kind === "support" && payload.amount < 500) {
-    statusEl.hidden = false;
-    statusEl.className = "lead-status is-err";
-    statusEl.textContent = "Сумма поддержки — от 500 ₽.";
     return;
   }
   submitBtn.disabled = true;
