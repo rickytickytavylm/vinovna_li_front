@@ -317,11 +317,28 @@ form?.addEventListener("submit", async (e) => {
   const bodyEl = document.getElementById("oracle-body");
   if (!grid || !sheet || !cards.length) return;
 
-  grid.innerHTML = cards.map((card, i) => `
-    <button type="button" class="oracle-card" data-card="${card.id}" aria-label="Открыть карту ${i + 1}">
+  grid.innerHTML = cards.map((card, i) => {
+    const delay = (i % 3) * 90 + Math.floor(i / 3) * 280;
+    return `
+    <button type="button" class="oracle-card" data-card="${card.id}" style="--delay:${delay}ms" aria-label="Открыть карту ${i + 1}">
       <img src="${card.src}" alt="${card.alt}" width="900" height="1600" loading="lazy">
-    </button>
-  `).join("");
+    </button>`;
+  }).join("");
+
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const playIn = () => grid.querySelectorAll(".oracle-card").forEach((card) => card.classList.add("is-in"));
+  if (reduceMotion) {
+    playIn();
+  } else if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver((entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      playIn();
+      io.disconnect();
+    }, { threshold: 0.02, rootMargin: "80px 0px 20% 0px" });
+    io.observe(grid);
+  } else {
+    playIn();
+  }
 
   function lockPage(on) {
     const galleryOpen = document.getElementById("lightbox") && !document.getElementById("lightbox").hidden;
