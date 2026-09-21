@@ -9,7 +9,7 @@ menuButton?.addEventListener("click", () => {
 });
 
 if (heroVideo) {
-  const isMobile = window.matchMedia("(max-width: 740px)").matches;
+  const isMobile = window.matchMedia("(max-width: 900px)").matches;
   heroVideo.src = isMobile
     ? heroVideo.dataset.mobileSrc
     : heroVideo.dataset.desktopSrc;
@@ -96,6 +96,12 @@ function selectedSupportAmount() {
   return Number(active?.dataset.amount) || 2000;
 }
 
+function syncAmountChips(value) {
+  document.querySelectorAll(".amount-chip").forEach((chip) => {
+    chip.classList.toggle("is-active", Number(chip.dataset.amount) === Number(value));
+  });
+}
+
 function refreshSupportAmount() {
   const amt = selectedSupportAmount();
   if (supportPicked) {
@@ -106,18 +112,22 @@ function refreshSupportAmount() {
 
 document.querySelectorAll(".amount-chip").forEach((chip) => {
   chip.addEventListener("click", () => {
-    document.querySelectorAll(".amount-chip").forEach((c) => c.classList.remove("is-active"));
-    chip.classList.add("is-active");
-    if (otherAmount) otherAmount.value = "";
+    if (otherAmount) {
+      otherAmount.value = String(chip.dataset.amount || "");
+      otherAmount.dispatchEvent(new Event("input", { bubbles: true }));
+    }
+    syncAmountChips(chip.dataset.amount);
     refreshSupportAmount();
   });
 });
 otherAmount?.addEventListener("input", () => {
-  if (Number(otherAmount.value) >= 500) {
-    document.querySelectorAll(".amount-chip").forEach((c) => c.classList.remove("is-active"));
-  }
+  syncAmountChips(otherAmount.value);
   refreshSupportAmount();
 });
+if (otherAmount && !otherAmount.value) {
+  const active = document.querySelector(".amount-chip.is-active");
+  otherAmount.value = active?.dataset.amount || "2000";
+}
 refreshSupportAmount();
 
 function setSupportStatus(ok, text) {
@@ -228,6 +238,8 @@ menu?.querySelectorAll("a").forEach((link) => {
 document.getElementById("lead-close")?.addEventListener("click", closeLead);
 modal?.addEventListener("click", (e) => { if (e.target === modal) closeLead(); });
 document.addEventListener("keydown", (e) => {
+  const box = document.getElementById("lightbox");
+  if (box && !box.hidden) return;
   if (e.key === "Escape" && modal && !modal.hidden) closeLead();
 });
 
@@ -288,3 +300,84 @@ form?.addEventListener("submit", async (e) => {
     submitBtn.disabled = false;
   }
 });
+
+(function initGallery() {
+  const rail = document.getElementById("gallery-rail");
+  const shots = [...document.querySelectorAll(".gallery__shot")];
+  const box = document.getElementById("lightbox");
+  const imgEl = document.getElementById("lightbox-img");
+  const capEl = document.getElementById("lightbox-cap");
+  const thumbs = document.getElementById("lightbox-thumbs");
+  if (!rail || !shots.length || !box || !imgEl || !thumbs) return;
+
+  let index = 0;
+  thumbs.innerHTML = shots.map((shot, i) => {
+    const src = shot.querySelector("img")?.getAttribute("src") || "";
+    return `<button type="button" class="lightbox__thumb" data-index="${i}" aria-label="Кадр ${i + 1}"><img src="${src}" alt=""></button>`;
+  }).join("");
+
+  function lockPage(on) {
+    document.body.style.overflow = on || (modal && !modal.hidden) ? "hidden" : "";
+  }
+
+  function render(i) {
+    index = (i + shots.length) % shots.length;
+    const img = shots[index].querySelector("img");
+    imgEl.src = img?.src || "";
+    imgEl.alt = img?.alt || "";
+    if (capEl) capEl.textContent = `${index + 1} / ${shots.length}`;
+    thumbs.querySelectorAll(".lightbox__thumb").forEach((thumb, n) => {
+      thumb.classList.toggle("is-active", n === index);
+    });
+    thumbs.querySelector(".is-active")?.scrollIntoView({ inline: "center", block: "nearest" });
+  }
+
+  function open(i) {
+    render(i);
+    box.hidden = false;
+    lockPage(true);
+  }
+
+  function close() {
+    box.hidden = true;
+    imgEl.removeAttribute("src");
+    lockPage(false);
+  }
+
+  shots.forEach((shot, i) => shot.addEventListener("click", () => open(i)));
+  document.getElementById("lightbox-close")?.addEventListener("click", close);
+  document.getElementById("lightbox-prev")?.addEventListener("click", () => render(index - 1));
+  document.getElementById("lightbox-next")?.addEventListener("click", () => render(index + 1));
+  thumbs.addEventListener("click", (e) => {
+    const thumb = e.target.closest(".lightbox__thumb");
+    if (thumb) render(Number(thumb.dataset.index));
+  });
+
+  document.querySelectorAll("[data-gallery-dir]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      rail.scrollBy({ left: Number(btn.dataset.galleryDir) * Math.round(rail.clientWidth * 0.78), behavior: "smooth" });
+    });
+  });
+
+  rail.addEventListener("wheel", (e) => {
+    if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+    rail.scrollLeft += e.deltaY;
+    e.preventDefault();
+  }, { passive: false });
+
+  document.addEventListener("keydown", (e) => {
+    if (box.hidden) return;
+    if (e.key === "Escape") close();
+    if (e.key === "ArrowLeft") render(index - 1);
+    if (e.key === "ArrowRight") render(index + 1);
+  });
+
+  let touchX = 0;
+  box.addEventListener("touchstart", (e) => {
+    touchX = e.changedTouches[0].clientX;
+  }, { passive: true });
+  box.addEventListener("touchend", (e) => {
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 40) render(index + (dx < 0 ? 1 : -1));
+  }, { passive: true });
+})();
