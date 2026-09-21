@@ -1,3 +1,10 @@
+["gesturestart", "gesturechange", "gestureend"].forEach((type) => {
+  document.addEventListener(type, (event) => event.preventDefault(), { passive: false });
+});
+document.addEventListener("touchmove", (event) => {
+  if (event.touches.length > 1) event.preventDefault();
+}, { passive: false });
+
 const menuButton = document.querySelector(".menu-toggle");
 const menu = document.querySelector(".desktop-nav");
 const heroVideo = document.querySelector(".hero__video");
