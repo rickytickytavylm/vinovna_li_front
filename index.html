@@ -25,7 +25,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260921c">
+  <link rel="stylesheet" href="styles.css?v=20260921d">
 </head>
 <body>
   <header class="site-header">
@@ -34,6 +34,7 @@
     </a>
     <nav class="desktop-nav" aria-label="Основная навигация">
       <a href="#about">О спектакле</a>
+      <a href="#cards">Карты</a>
       <a href="#artists">Артисты</a>
       <a href="#cast">Создатели</a>
       <a href="#gallery">Галерея</a>
@@ -103,8 +104,22 @@
       <div class="scene__text reveal">
         <p class="eyebrow eyebrow--red">В центре внимания</p>
         <h2>История, в которой каждый <em>вынесет</em> свой вердикт.</h2>
-        <a class="text-link" href="#details">Когда и где <span>↓</span></a>
+        <div class="scene__links">
+          <a class="text-link" href="#cards">Выберите карту <span>↓</span></a>
+          <a class="text-link" href="#details">Когда и где <span>↓</span></a>
+        </div>
       </div>
+    </section>
+
+    <section class="oracle" id="cards">
+      <div class="oracle__intro reveal">
+        <p class="eyebrow">Метафорические карты</p>
+        <h2>Услышьте ответ<br><em>от себя.</em></h2>
+        <p class="oracle__lead">Каждый спектакль в нашем театре — вопрос к зрителю. Психолог Ирина Борецкая создала колоду о любви, чувствах и отношениях, созвучную сюжету «Виновна ли?».</p>
+        <p class="oracle__how">Сформулируйте вопрос. Выберите карту, которая откликается. Посмотрите на образ — затем откройте интерпретацию и сравните со своим ощущением.</p>
+      </div>
+      <div class="oracle__grid reveal" id="oracle-grid"></div>
+      <p class="oracle__note reveal">Метафора — язык образов и чувств. Эти карты созданы в атмосфере спектакля, но смысл шире: каждый образ — приглашение увидеть в нём что-то своё.</p>
     </section>
 
     <section class="event" id="details">
@@ -579,6 +594,20 @@
     </div>
   </div>
 
+  <div class="oracle-sheet" id="oracle-sheet" hidden>
+    <button class="oracle-sheet__close" type="button" id="oracle-close" aria-label="Закрыть"></button>
+    <div class="oracle-sheet__layout">
+      <figure class="oracle-sheet__art">
+        <img id="oracle-img" alt="">
+      </figure>
+      <div class="oracle-sheet__read">
+        <p class="eyebrow">Интерпретация</p>
+        <h3 id="oracle-question"></h3>
+        <div id="oracle-body"></div>
+        <p class="oracle-sheet__disclaimer">Это метафорическая интерпретация психолога Ирины Борецкой, а не диагностика.</p>
+      </div>
+    </div>
+  </div>
   <div class="lightbox" id="lightbox" hidden>
     <button class="lightbox__close" type="button" id="lightbox-close" aria-label="Закрыть"></button>
     <button class="lightbox__nav lightbox__nav--prev" type="button" id="lightbox-prev" aria-label="Предыдущий кадр"></button>
@@ -590,7 +619,8 @@
     <div class="lightbox__thumbs" id="lightbox-thumbs"></div>
   </div>
 
-  <script src="config.js?v=20260921c"></script>
-  <script src="script.js?v=20260921c"></script>
+  <script src="config.js?v=20260921d"></script>
+  <script src="cards.js?v=20260921d"></script>
+  <script src="script.js?v=20260921d"></script>
 </body>
 </html>

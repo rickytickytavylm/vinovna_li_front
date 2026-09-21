@@ -308,6 +308,57 @@ form?.addEventListener("submit", async (e) => {
   }
 });
 
+(function initOracle() {
+  const cards = window.SHOW_CARDS || [];
+  const grid = document.getElementById("oracle-grid");
+  const sheet = document.getElementById("oracle-sheet");
+  const imgEl = document.getElementById("oracle-img");
+  const qEl = document.getElementById("oracle-question");
+  const bodyEl = document.getElementById("oracle-body");
+  if (!grid || !sheet || !cards.length) return;
+
+  grid.innerHTML = cards.map((card, i) => `
+    <button type="button" class="oracle-card" data-card="${card.id}" aria-label="Открыть карту ${i + 1}">
+      <img src="${card.src}" alt="${card.alt}" width="900" height="1600" loading="lazy">
+    </button>
+  `).join("");
+
+  function lockPage(on) {
+    const galleryOpen = document.getElementById("lightbox") && !document.getElementById("lightbox").hidden;
+    document.body.style.overflow = on || galleryOpen || (modal && !modal.hidden) ? "hidden" : "";
+  }
+
+  function openCard(id) {
+    const card = cards.find((item) => item.id === id);
+    if (!card) return;
+    imgEl.src = card.src;
+    imgEl.alt = card.alt;
+    qEl.textContent = card.question;
+    bodyEl.innerHTML = card.html;
+    sheet.hidden = false;
+    sheet.scrollTop = 0;
+    lockPage(true);
+  }
+
+  function closeCard() {
+    sheet.hidden = true;
+    imgEl.removeAttribute("src");
+    lockPage(false);
+  }
+
+  grid.addEventListener("click", (event) => {
+    const btn = event.target.closest("[data-card]");
+    if (btn) openCard(btn.dataset.card);
+  });
+  document.getElementById("oracle-close")?.addEventListener("click", closeCard);
+  sheet.addEventListener("click", (event) => {
+    if (event.target === sheet) closeCard();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !sheet.hidden) closeCard();
+  });
+})();
+
 (function initGallery() {
   const rail = document.getElementById("gallery-rail");
   const shots = [...document.querySelectorAll(".gallery__shot")];
@@ -324,7 +375,8 @@ form?.addEventListener("submit", async (e) => {
   }).join("");
 
   function lockPage(on) {
-    document.body.style.overflow = on || (modal && !modal.hidden) ? "hidden" : "";
+    const oracleOpen = document.getElementById("oracle-sheet") && !document.getElementById("oracle-sheet").hidden;
+    document.body.style.overflow = on || oracleOpen || (modal && !modal.hidden) ? "hidden" : "";
   }
 
   function render(i) {
