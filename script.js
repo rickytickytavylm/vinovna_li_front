@@ -317,13 +317,38 @@ form?.addEventListener("submit", async (e) => {
   const bodyEl = document.getElementById("oracle-body");
   if (!grid || !sheet || !cards.length) return;
 
-  grid.innerHTML = cards.map((card, i) => {
-    const delay = (i % 3) * 90 + Math.floor(i / 3) * 280;
-    return `
-    <button type="button" class="oracle-card" data-card="${card.id}" style="--delay:${delay}ms" aria-label="Открыть карту ${i + 1}">
+  const sizes = ["a", "c", "b", "b", "a", "c", "c", "b", "a"];
+  const colCount = window.matchMedia("(max-width: 900px)").matches ? 2 : 3;
+  const cols = Array.from({ length: colCount }, () => []);
+
+  function fillTape(el) {
+    if (!el) return;
+    const loop = [...cards, ...cards];
+    el.innerHTML = loop.map((card) => `
+      <div class="oracle-tape__item">
+        <img src="${card.src}" alt="" loading="lazy" decoding="async">
+      </div>
+    `).join("");
+  }
+  fillTape(document.getElementById("oracle-tape"));
+  fillTape(document.getElementById("oracle-tape-b"));
+
+  cards.forEach((card, i) => {
+    const delay = (i % colCount) * 90 + Math.floor(i / colCount) * 180;
+    const size = sizes[i % sizes.length];
+    const num = String(i + 1).padStart(2, "0");
+    const label = card.label || `Карта ${num}`;
+    cols[i % colCount].push(`
+    <button type="button" class="oracle-card oracle-card--${size}" data-card="${card.id}" style="--delay:${delay}ms" aria-label="${label}">
       <img src="${card.src}" alt="${card.alt}" width="900" height="1600" loading="lazy">
-    </button>`;
-  }).join("");
+      <span class="oracle-card__meta">
+        <span class="oracle-card__num">${num}</span>
+        <span class="oracle-card__title">${label}</span>
+      </span>
+    </button>`);
+  });
+
+  grid.innerHTML = cols.map((col) => `<div class="oracle__col">${col.join("")}</div>`).join("");
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const playIn = () => grid.querySelectorAll(".oracle-card").forEach((card) => card.classList.add("is-in"));
