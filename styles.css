@@ -300,22 +300,119 @@ button, .amount-chip { color: inherit; font: inherit; background: transparent; -
   transform: none;
 }
 
-.oracle-sheet { position: fixed; inset: 0; z-index: 92; background: #050203; color: var(--paper); overflow: auto; overscroll-behavior: none; touch-action: pan-y; padding: max(20px, env(safe-area-inset-top)) 4vw max(24px, env(safe-area-inset-bottom)); }
-.oracle-sheet[hidden] { display: none; }
-.oracle-sheet__close { position: sticky; top: 0; float: right; z-index: 2; width: 44px; height: 44px; border: 1px solid rgba(255,255,255,.35); background: rgba(5,2,3,.45); cursor: pointer; touch-action: manipulation; }
-.oracle-sheet__close::before, .oracle-sheet__close::after { content: ""; position: absolute; top: 50%; left: 50%; width: 16px; height: 1px; background: #fff; }
-.oracle-sheet__close::before { transform: translate(-50%, -50%) rotate(45deg); }
-.oracle-sheet__close::after { transform: translate(-50%, -50%) rotate(-45deg); }
-.oracle-sheet__layout { display: grid; grid-template-columns: minmax(240px, .78fr) minmax(0, 1.22fr); gap: clamp(24px, 5vw, 72px); align-items: start; max-width: 1180px; margin: 8px auto 0; clear: both; }
-.oracle-sheet__art { margin: 0; background: #120306; position: sticky; top: 56px; border-radius: 12px; overflow: hidden; }
-.oracle-sheet__art img { display: block; width: 100%; height: auto; }
-.oracle-sheet__read { min-width: 0; padding-bottom: 24px; }
-.oracle-sheet__read .eyebrow { color: #f25062; margin-bottom: 16px; }
-.oracle-sheet__read h3 { font: 500 clamp(28px, 3.6vw, 48px)/.92 var(--serif); letter-spacing: -.04em; margin: 0 0 22px; }
-.oracle-sheet__read p, .oracle-sheet__read li { font: 400 17px/1.35 var(--serif); margin: 0 0 14px; }
-.oracle-sheet__read ul { margin: 0 0 18px; padding: 0 0 0 18px; }
-.oracle-sheet__read .oracle-ask { font-style: italic; margin-top: 8px; }
-.oracle-sheet__disclaimer { margin-top: 28px; font: 500 11px/1.45 var(--sans) !important; letter-spacing: .06em; text-transform: uppercase; opacity: .45; }
+.pin-page {
+  margin: 0;
+  background: #050203;
+  color: var(--paper);
+  min-height: 100vh;
+}
+.pin-bar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: calc(58px + env(safe-area-inset-top));
+  padding: env(safe-area-inset-top) 4vw 0;
+  background: rgba(5, 2, 3, .82);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(248, 244, 237, .08);
+}
+.pin-bar__back {
+  font: 600 10px/1 var(--sans);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(248, 244, 237, .78);
+}
+.pin-bar__brand { color: var(--paper); font-size: 22px; }
+.pin-bar__brand i { font-size: 23px; }
+.pin {
+  display: block;
+}
+.pin__hero {
+  margin: 0;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 4vw 4px;
+  background: #050203;
+}
+.pin__hero img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 80vw;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 20px;
+  box-shadow: 0 32px 90px rgba(0, 0, 0, .6);
+}
+.pin__body {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 36px 4vw max(72px, env(safe-area-inset-bottom));
+}
+.pin__body .eyebrow {
+  color: #f25062;
+  margin: 0 0 14px;
+}
+.pin__body h1 {
+  font: 500 clamp(28px, 5vw, 44px)/.98 var(--serif);
+  letter-spacing: -.04em;
+  margin: 0 0 28px;
+}
+.pin__text p,
+.pin__text li {
+  font: 400 18px/1.4 var(--serif);
+  margin: 0 0 16px;
+}
+.pin__text ul {
+  margin: 0 0 20px;
+  padding: 0 0 0 18px;
+}
+.pin__text .oracle-ask {
+  font-style: italic;
+  margin-top: 10px;
+}
+.pin__disclaimer {
+  margin: 36px 0 0;
+  font: 500 11px/1.45 var(--sans);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  opacity: .42;
+}
+.pin__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 36px;
+}
+.pin__btn { text-decoration: none; }
+.pin-page .button {
+  border-color: rgba(248, 244, 237, .55);
+  color: var(--paper);
+}
+.pin-page .button:hover {
+  background: var(--paper);
+  color: var(--ink);
+}
+.pin-page .button--ghost {
+  border-color: rgba(248, 244, 237, .35);
+  color: rgba(248, 244, 237, .85);
+}
+.pin-page .button--ghost:hover {
+  background: var(--paper);
+  color: var(--ink);
+}
+.pin-missing {
+  padding: 20vh 4vw;
+  text-align: center;
+  font: 400 20px/1.3 var(--serif);
+}
+.pin-missing a { text-decoration: underline; }
 
 .event { background: var(--red); color: var(--paper); display: grid; grid-template-columns: 1.1fr 1fr; padding: 9vw 8vw; }.event__heading h2 { font-size: clamp(90px, 13vw, 190px); margin-top: 13px; }.event__info { align-self: center; border-top: 1px solid rgba(255,255,255,.55); }.event__info div { border-bottom: 1px solid rgba(255,255,255,.55); display: grid; grid-template-columns: 1fr 1.5fr; gap: 30px; padding: 19px 0; }.event__info span { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }.event__info strong { font: 400 22px/1.05 var(--serif); }.event__actions { grid-column: 2; display: flex; flex-wrap: wrap; gap: 12px; margin-top: 40px; }
 
@@ -499,12 +596,11 @@ footer p, footer small { font-size: 10px; font-weight: 400; letter-spacing: .07e
   .oracle-card { border-radius: 10px; }
   .oracle-card__meta { opacity: 1; transform: none; padding: 36px 10px 10px; }
   .oracle-card__title { font-size: 14px; }
-  .oracle-sheet { padding: max(14px, env(safe-area-inset-top)) var(--gutter) max(20px, env(safe-area-inset-bottom)); }
-  .oracle-sheet__layout { display: flex; flex-direction: column; gap: 22px; margin-top: 8px; }
-  .oracle-sheet__art { position: static; }
-  .oracle-sheet__art img { max-height: 46vh; width: 100%; object-fit: contain; background: #120306; }
-  .oracle-sheet__read h3 { font-size: clamp(24px, 7vw, 34px); }
-  .oracle-sheet__read p, .oracle-sheet__read li { font-size: 16px; }
+  .pin__hero { min-height: 80vh; padding: 8px var(--gutter) 0; }
+  .pin__hero img { max-width: 88vw; max-height: 80vh; border-radius: 16px; }
+  .pin__body { padding: 28px var(--gutter) max(56px, env(safe-area-inset-bottom)); }
+  .pin__body h1 { font-size: clamp(24px, 7vw, 34px); }
+  .pin__text p, .pin__text li { font-size: 16px; }
   .event { display: block; padding: 72px var(--gutter); overflow: hidden; }.event__heading h2 { font-size: clamp(52px, 16vw, 84px); }.event__info { margin-top: 40px; }.event__info div { grid-template-columns: .9fr 1.3fr; gap: 16px; }.event__info strong { font-size: 18px; }.event__actions { margin-top: 28px; }.event__actions .button { width: 100%; }
   .cast { padding: 75px var(--gutter); }
   .section-heading { margin-bottom: 36px; }

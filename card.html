@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="description" content="Метафорическая карта спектакля «Виновна ли?»">
+  <title>Карта — Виновна ли?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=20260924a">
+</head>
+<body class="pin-page">
+  <header class="pin-bar">
+    <a class="pin-bar__back" href="cards.html" id="pin-back">← К колоде</a>
+    <a class="brand pin-bar__brand" href="index.html" aria-label="Виновна ли? — на главную">
+      <span>Виновна</span><i>ли?</i>
+    </a>
+  </header>
+
+  <main class="pin" id="pin-root" hidden>
+    <figure class="pin__hero">
+      <img id="pin-img" alt="">
+    </figure>
+    <article class="pin__body">
+      <p class="eyebrow" id="pin-label"></p>
+      <h1 id="pin-question"></h1>
+      <div class="pin__text" id="pin-body"></div>
+      <p class="pin__disclaimer">Это метафорическая интерпретация психолога Ирины Борецкой, а не диагностика.</p>
+      <div class="pin__actions">
+        <a class="button button--ghost pin__btn" href="cards.html">Все карты</a>
+        <a class="button pin__btn" href="index.html#cards">На главную</a>
+      </div>
+    </article>
+  </main>
+
+  <p class="pin-missing" id="pin-missing" hidden>Карта не найдена. <a href="cards.html">Вернуться к колоде</a></p>
+
+  <script src="cards.js?v=20260924a"></script>
+  <script>
+    (() => {
+      const cards = window.SHOW_CARDS || [];
+      const id = new URLSearchParams(location.search).get("id");
+      const card = cards.find((item) => item.id === id);
+      const root = document.getElementById("pin-root");
+      const missing = document.getElementById("pin-missing");
+      if (!card) {
+        missing.hidden = false;
+        return;
+      }
+      document.title = `${card.label || "Карта"} — Виновна ли?`;
+      const desc = document.querySelector('meta[name="description"]');
+      if (desc) desc.setAttribute("content", card.question || card.label || "");
+      document.getElementById("pin-img").src = card.src;
+      document.getElementById("pin-img").alt = card.alt || "";
+      document.getElementById("pin-label").textContent = card.label || "Карта";
+      document.getElementById("pin-question").textContent = card.question || "";
+      document.getElementById("pin-body").innerHTML = card.html || "";
+      const ref = document.referrer || "";
+      const back = document.getElementById("pin-back");
+      if (ref.includes("index.html") || /aglaya-neurosound\.ru\/?$/.test(ref) || ref.includes("/#cards")) {
+        back.href = "index.html#cards";
+        back.textContent = "← На главную";
+      }
+      root.hidden = false;
+    })();
+  </script>
+</body>
+</html>

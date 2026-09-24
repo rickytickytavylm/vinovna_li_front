@@ -324,8 +324,7 @@ form?.addEventListener("submit", async (e) => {
   }).join("");
 
   function lockPage(on) {
-    const oracleOpen = document.getElementById("oracle-sheet") && !document.getElementById("oracle-sheet").hidden;
-    document.body.style.overflow = on || oracleOpen || (modal && !modal.hidden) ? "hidden" : "";
+    document.body.style.overflow = on || (modal && !modal.hidden) ? "hidden" : "";
   }
 
   function render(i) {
