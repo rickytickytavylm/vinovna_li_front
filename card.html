@@ -58,7 +58,7 @@
       document.getElementById("pin-body").innerHTML = card.html || "";
       const ref = document.referrer || "";
       const back = document.getElementById("pin-back");
-      if (ref.includes("index.html") || /aglaya-neurosound\.ru\/?$/.test(ref) || ref.includes("/#cards")) {
+      if (ref.includes("index.html") || /vinovna-li\.ru\/?$/.test(ref) || /aglaya-neurosound\.ru\/?$/.test(ref) || ref.includes("/#cards")) {
         back.href = "index.html#cards";
         back.textContent = "← На главную";
       }
