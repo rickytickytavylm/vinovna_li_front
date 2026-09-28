@@ -61,7 +61,7 @@
       document.getElementById("pin-question").textContent = card.question || "";
       document.getElementById("pin-body").innerHTML = card.html || "";
       const ref = document.referrer || "";
-      const fromHome = ref.includes("index.html") || /vinovna-li\.ru\/?$/.test(ref) || /aglaya-neurosound\.ru\/?$/.test(ref) || ref.includes("/#cards");
+      const fromHome = ref.includes("index.html") || /vinovnalishow\.ru\/?$/.test(ref) || /vinovna-li\.ru\/?$/.test(ref) || /aglaya-neurosound\.ru\/?$/.test(ref) || ref.includes("/#cards");
       const deckHref = fromHome ? "index.html#cards" : "cards.html";
 
       function setLookBack() {
