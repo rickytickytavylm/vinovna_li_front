@@ -293,12 +293,6 @@ button, .amount-chip { color: inherit; font: inherit; background: transparent; -
   transform: scale(1.04);
   filter: saturate(1) contrast(1.08);
 }
-.oracle-card:hover .oracle-card__meta,
-.oracle-card:focus-visible .oracle-card__meta,
-.oracle-rail .oracle-card .oracle-card__meta {
-  opacity: 1;
-  transform: none;
-}
 
 .pin-page {
   margin: 0;
@@ -413,6 +407,77 @@ button, .amount-chip { color: inherit; font: inherit; background: transparent; -
   font: 400 20px/1.3 var(--serif);
 }
 .pin-missing a { text-decoration: underline; }
+.pin__choose {
+  display: flex;
+  justify-content: center;
+  padding: 10px 4vw max(22px, env(safe-area-inset-bottom));
+}
+.pin-page--look {
+  height: 100dvh;
+  overflow: hidden;
+}
+.pin-page--look .pin {
+  height: calc(100dvh - 58px - env(safe-area-inset-top));
+  display: flex;
+  flex-direction: column;
+}
+.pin-page--look .pin__hero {
+  flex: 1;
+  min-height: 0;
+  padding: 8px 4vw 0;
+}
+.pin-page--look .pin__hero img {
+  max-width: 86vw;
+  max-height: 100%;
+}
+.pin-page--look .pin__choose { flex: 0 0 auto; }
+.pin-page--look .pin__body { display: none; }
+
+.proof {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(28px, 6vw, 80px);
+  padding: 8vw;
+  border-top: 1px solid var(--line);
+  background: var(--paper);
+}
+.proof__num {
+  display: block;
+  font: 500 clamp(72px, 12vw, 160px)/.72 var(--serif);
+  letter-spacing: -.07em;
+  margin: 0 0 18px;
+}
+.proof p {
+  font: 400 clamp(18px, 2.1vw, 26px)/1.2 var(--serif);
+  margin: 0;
+  max-width: 320px;
+}
+
+.voices {
+  background: var(--paper);
+  color: var(--ink);
+  padding: 10vw 8vw 12vw;
+}
+.voices .section-heading { margin-bottom: 28px; }
+.voices__list { display: grid; }
+.voices blockquote {
+  margin: 0;
+  padding: 32px 0;
+  border-top: 1px solid var(--line);
+}
+.voices blockquote p {
+  font: italic 400 clamp(22px, 3.2vw, 36px)/1.18 var(--serif);
+  letter-spacing: -.02em;
+  margin: 0 0 16px;
+  max-width: 860px;
+}
+.voices cite {
+  font: 600 10px/1 var(--sans);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  font-style: normal;
+  opacity: .5;
+}
 
 .event { background: var(--red); color: var(--paper); display: grid; grid-template-columns: 1.1fr 1fr; padding: 9vw 8vw; }.event__heading h2 { font-size: clamp(90px, 13vw, 190px); margin-top: 13px; }.event__info { align-self: center; border-top: 1px solid rgba(255,255,255,.55); }.event__info div { border-bottom: 1px solid rgba(255,255,255,.55); display: grid; grid-template-columns: 1fr 1.5fr; gap: 30px; padding: 19px 0; }.event__info span { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }.event__info strong { font: 400 22px/1.05 var(--serif); }.event__actions { grid-column: 2; display: flex; flex-wrap: wrap; gap: 12px; margin-top: 40px; }
 
@@ -428,7 +493,7 @@ button, .amount-chip { color: inherit; font: inherit; background: transparent; -
 }
 .artist { border-top: 1px solid var(--line); padding-top: 12px; }
 .artist__image { aspect-ratio: .78/1; background: #120306; margin-bottom: 18px; overflow: hidden; position: relative; }
-.artist__image img { display: block; height: 100%; object-fit: cover; object-position: center top; width: 100%; }
+.artist__image img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; object-position: center top; }
 .artist h3 { font: 500 clamp(34px, 3.2vw, 52px)/.79 var(--serif); letter-spacing: -.055em; margin: 0 0 12px; text-transform: uppercase; }
 .artist p { font-size: 10px; font-weight: 500; letter-spacing: .06em; line-height: 1.45; margin: 0; max-width: 260px; text-transform: uppercase; }
 .artists { padding: 72px 0 20px; }
@@ -438,7 +503,7 @@ button, .amount-chip { color: inherit; font: inherit; background: transparent; -
 }
 .person { border-top: 1px solid var(--line); padding-top: 12px; }
 .portrait { aspect-ratio: 3/4; background: #120306; margin-bottom: 16px; overflow: hidden; position: relative; }
-.portrait img { display: block; height: 100%; object-fit: cover; object-position: center 14%; width: 100%; filter: saturate(.86) contrast(1.06); }
+.portrait img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 14%; filter: saturate(.86) contrast(1.06); }
 .portrait--empty { background: linear-gradient(180deg, #2a0d12, #120306); }
 .person h3 { font: 500 clamp(26px, 2.6vw, 40px)/.82 var(--serif); letter-spacing: -.05em; margin: 0 0 8px; text-transform: uppercase; }
 .person__role { font: 600 10px/1.4 var(--sans); letter-spacing: .08em; margin: 0 0 8px; text-transform: uppercase; }
@@ -466,9 +531,9 @@ button, .amount-chip { color: inherit; font: inherit; background: transparent; -
 .gallery__viewport::after { right: 0; background: linear-gradient(270deg, #080506, transparent); }
 .gallery__rail { display: flex; gap: 12px; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scroll-padding-inline: 4vw; padding: 4px 4vw 8px; -webkit-overflow-scrolling: touch; scrollbar-width: none; overscroll-behavior-x: contain; touch-action: pan-x; }
 .gallery__rail::-webkit-scrollbar { display: none; }
-.gallery__shot { flex: 0 0 auto; width: min(38vw, 320px); aspect-ratio: 3/4; scroll-snap-align: start; border: 0; padding: 0; margin: 0; background: #120306; overflow: hidden; cursor: pointer; }
+.gallery__shot { flex: 0 0 auto; width: min(38vw, 320px); aspect-ratio: 3/4; scroll-snap-align: start; border: 0; padding: 0; margin: 0; background: #120306; overflow: hidden; cursor: pointer; position: relative; }
 .gallery__shot--wide { width: min(58vw, 560px); aspect-ratio: 16/10; }
-.gallery__shot img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .55s ease, filter .55s ease; filter: saturate(.88) contrast(1.05); }
+.gallery__shot img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .55s ease, filter .55s ease; filter: saturate(.88) contrast(1.05); }
 .gallery__shot:hover img { transform: scale(1.04); filter: saturate(1) contrast(1.08); }
 
 .lightbox { position: fixed; inset: 0; z-index: 90; background: #050203; color: #fff; display: grid; grid-template-rows: 1fr auto; padding: 16px 16px max(16px, env(safe-area-inset-bottom)); }
@@ -544,6 +609,9 @@ footer p, footer small { font-size: 10px; font-weight: 400; letter-spacing: .07e
 .footer-social::after { content: ""; width: 6px; height: 6px; border-top: 1px solid currentColor; border-right: 1px solid currentColor; transform: rotate(45deg) translateY(-1px); flex: 0 0 auto; }
 
 .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }.reveal.is-visible { opacity: 1; transform: none; }
+@media (max-width: 900px) {
+  .reveal { transform: none; }
+}
 @media (prefers-reduced-motion: reduce) {
   .oracle-card,
   .oracle-rail .oracle-card,
@@ -594,10 +662,16 @@ footer p, footer small { font-size: 10px; font-weight: 400; letter-spacing: .07e
   .oracle__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
   .oracle__col { gap: 6px; }
   .oracle-card { border-radius: 10px; }
-  .oracle-card__meta { opacity: 1; transform: none; padding: 36px 10px 10px; }
-  .oracle-card__title { font-size: 14px; }
+  .pin-page--look .pin { height: calc(100dvh - 63px - env(safe-area-inset-top)); }
   .pin__hero { min-height: 80vh; padding: 8px var(--gutter) 0; }
   .pin__hero img { max-width: 88vw; max-height: 80vh; border-radius: 16px; }
+  .pin-page--look .pin__hero img { max-width: 92vw; }
+  .pin__choose { padding-left: var(--gutter); padding-right: var(--gutter); }
+  .proof { display: block; padding: 56px var(--gutter); }
+  .proof__item + .proof__item { margin-top: 36px; padding-top: 36px; border-top: 1px solid var(--line); }
+  .proof__num { font-size: clamp(64px, 22vw, 96px); }
+  .voices { padding: 56px var(--gutter) 72px; }
+  .voices blockquote p { font-size: clamp(20px, 6vw, 28px); }
   .pin__body { padding: 28px var(--gutter) max(56px, env(safe-area-inset-bottom)); }
   .pin__body h1 { font-size: clamp(24px, 7vw, 34px); }
   .pin__text p, .pin__text li { font-size: 16px; }

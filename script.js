@@ -42,7 +42,7 @@ const observer = new IntersectionObserver(
       }
     });
   },
-  { threshold: 0.12 }
+  { threshold: 0.01, rootMargin: "80px 0px" }
 );
 
 document.querySelectorAll(".reveal").forEach((element) => observer.observe(element));
