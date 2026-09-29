@@ -17,19 +17,39 @@ menuButton?.addEventListener("click", () => {
 
 if (heroVideo) {
   const isMobile = window.matchMedia("(max-width: 900px)").matches;
-  heroVideo.src = isMobile
-    ? heroVideo.dataset.mobileSrc
-    : heroVideo.dataset.desktopSrc;
+  const nextSrc = isMobile ? heroVideo.dataset.mobileSrc : heroVideo.dataset.desktopSrc;
+  heroVideo.muted = true;
+  heroVideo.defaultMuted = true;
+  heroVideo.playsInline = true;
+  heroVideo.loop = true;
+  heroVideo.autoplay = true;
+  heroVideo.setAttribute("muted", "");
+  heroVideo.setAttribute("playsinline", "");
+  heroVideo.setAttribute("webkit-playsinline", "");
   heroVideo.poster = isMobile
     ? "media/video/hero-poster-mobile.jpg?v=20260919b"
     : "media/video/hero-poster.jpg?v=20260919b";
+  if (heroVideo.getAttribute("src") !== nextSrc) {
+    heroVideo.src = nextSrc;
+  }
 
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     heroVideo.removeAttribute("autoplay");
     heroVideo.controls = true;
   } else {
-    heroVideo.load();
-    heroVideo.play().catch(() => {});
+    const tryPlay = () => {
+      const play = heroVideo.play();
+      if (play && typeof play.catch === "function") play.catch(() => {});
+    };
+    if (heroVideo.readyState >= 2) tryPlay();
+    heroVideo.addEventListener("canplay", tryPlay);
+    heroVideo.addEventListener("loadeddata", tryPlay);
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) tryPlay();
+    });
+    window.addEventListener("pageshow", tryPlay);
+    document.addEventListener("touchstart", tryPlay, { once: true, passive: true });
+    document.addEventListener("click", tryPlay, { once: true });
   }
 }
 
