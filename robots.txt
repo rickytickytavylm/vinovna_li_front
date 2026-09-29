@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+Disallow: /card.html
+Disallow: /card.html?
+Disallow: /support-terms.html
+
+Sitemap: https://vinovnalishow.ru/sitemap.xml
