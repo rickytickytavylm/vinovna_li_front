@@ -408,3 +408,119 @@ form?.addEventListener("submit", async (e) => {
     if (Math.abs(dx) > 40) render(index + (dx < 0 ? 1 : -1));
   }, { passive: true });
 })();
+
+// ── Маркетинговая аналитика спектакля ──
+// Фиксирует первый источник визита, просмотр и клики по всем ссылкам/кнопкам.
+(() => {
+  if (!API_BASE) return;
+
+  const ATTR_KEY = "vinovnali_attribution";
+  const DEVICE_KEY = "vinovnali_device_id";
+  const PAGE_KEY = `vinovnali_page_view:${location.pathname}:${location.search}`;
+  const params = new URLSearchParams(location.search);
+
+  const clean = (value, max = 160) => String(value || "").replace(/\s+/g, " ").trim().slice(0, max);
+  const hostOf = (value) => {
+    try { return new URL(value).hostname.toLowerCase(); } catch { return ""; }
+  };
+  const sourceFromReferrer = (referrer) => {
+    const host = hostOf(referrer);
+    if (!host) return "direct";
+    if (host.includes("kudago.com")) return "kudago_legacy";
+    if (host === "vinovnali.ru" || host.endsWith(".vinovnali.ru")) return "legacy_site";
+    if (host.includes("instagram.com")) return "instagram";
+    if (host === "t.me" || host.endsWith(".telegram.org")) return "telegram";
+    if (host === "vk.ru" || host.endsWith(".vk.com")) return "vk";
+    if (host === "vc.ru" || host.endsWith(".vc.ru")) return "vc_ru";
+    if (host.includes("google.")) return "google";
+    if (host.includes("yandex.") || host === "ya.ru") return "yandex";
+    if (host.includes("7sbocmxidei1bb9cwe")) return "shadow_championship";
+    if (host === location.hostname.toLowerCase()) return "internal";
+    return host.replace(/^www\./, "") || "referral";
+  };
+  const readStored = () => {
+    try { return JSON.parse(sessionStorage.getItem(ATTR_KEY) || "null"); } catch { return null; }
+  };
+
+  const taggedSource = clean(params.get("utm_source"));
+  const attribution = taggedSource
+    ? {
+        source: taggedSource,
+        medium: clean(params.get("utm_medium")) || "referral",
+        campaign: clean(params.get("utm_campaign")),
+        content: clean(params.get("utm_content")),
+      }
+    : readStored() || {
+        source: sourceFromReferrer(document.referrer),
+        medium: document.referrer ? "referral" : "direct",
+        campaign: "",
+        content: "",
+      };
+  try { sessionStorage.setItem(ATTR_KEY, JSON.stringify(attribution)); } catch {}
+
+  let deviceId = "";
+  try {
+    deviceId = localStorage.getItem(DEVICE_KEY) || "";
+    if (!deviceId) {
+      deviceId = typeof crypto.randomUUID === "function"
+        ? crypto.randomUUID()
+        : `show-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      localStorage.setItem(DEVICE_KEY, deviceId);
+    }
+  } catch {
+    deviceId = `show-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  }
+
+  const track = (type, extra = {}) => {
+    const body = JSON.stringify({
+      type,
+      deviceId,
+      referrer: clean(document.referrer, 300),
+      meta: {
+        ...attribution,
+        page: "vinovnalishow.ru",
+        path: `${location.pathname}${location.search}`,
+        ...extra,
+      },
+    });
+    fetch(`${API_BASE}/api/events`, {
+      method: "POST",
+      body,
+      headers: { "Content-Type": "text/plain;charset=UTF-8" },
+      keepalive: true,
+    }).catch(() => {});
+  };
+
+  try {
+    if (!sessionStorage.getItem(PAGE_KEY)) {
+      sessionStorage.setItem(PAGE_KEY, "1");
+      track("page_view");
+    }
+  } catch {
+    track("page_view");
+  }
+
+  // Передаём UTM в QTickets: это пригодится, если площадка отдаст отчёт с метками.
+  document.querySelectorAll('a[href*="qtickets.ru"]').forEach((link) => {
+    try {
+      const url = new URL(link.href);
+      if (attribution.source) url.searchParams.set("utm_source", attribution.source);
+      if (attribution.medium) url.searchParams.set("utm_medium", attribution.medium);
+      if (attribution.campaign) url.searchParams.set("utm_campaign", attribution.campaign);
+      if (attribution.content) url.searchParams.set("utm_content", attribution.content);
+      link.href = url.toString();
+    } catch {}
+  });
+
+  document.addEventListener("click", (event) => {
+    const control = event.target.closest("a, button");
+    if (!control || control.disabled) return;
+    const href = control.tagName === "A" ? control.href : "";
+    const isTicket = control.classList.contains("ticket-link") || href.includes("qtickets.ru");
+    track(isTicket ? "ticket_click" : "button_click", {
+      label: clean(control.dataset.track || control.getAttribute("aria-label") || control.textContent || control.id || control.className),
+      element: control.tagName.toLowerCase(),
+      target: clean(href || control.dataset.lead || control.id, 500),
+    });
+  }, true);
+})();

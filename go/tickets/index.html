@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Переходим к билетам — «Виновна ли?»</title>
+  <style>
+    html, body { height: 100%; margin: 0; }
+    body {
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      box-sizing: border-box;
+      color: #2f2227;
+      background: #f7f0ed;
+      font: 500 16px/1.5 system-ui, sans-serif;
+      text-align: center;
+    }
+    a { color: #7d2438; }
+  </style>
+</head>
+<body>
+  <p>Переходим к выбору билетов…<br><a id="ticket-link" href="https://qtickets.ru/event/244957">Перейти вручную</a></p>
+  <script>
+    (() => {
+      const API = "https://api.xn----7sbocmxidei1bb9cwe.xn--p1ai";
+      const params = new URLSearchParams(location.search);
+      const value = (name, fallback = "") => String(params.get(name) || fallback).trim().slice(0, 160);
+      const source = value("utm_source", "golden_ring");
+      const medium = value("utm_medium", "partner");
+      const campaign = value("utm_campaign", "vinovna_li_2026");
+      const content = value("utm_content", "event_card");
+      let deviceId = "";
+      try {
+        deviceId = localStorage.getItem("vinovnali_device_id") || "";
+        if (!deviceId) {
+          deviceId = typeof crypto.randomUUID === "function"
+            ? crypto.randomUUID()
+            : `show-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+          localStorage.setItem("vinovnali_device_id", deviceId);
+        }
+      } catch {}
+
+      const target = new URL("https://qtickets.ru/event/244957");
+      target.searchParams.set("utm_source", source);
+      target.searchParams.set("utm_medium", medium);
+      target.searchParams.set("utm_campaign", campaign);
+      target.searchParams.set("utm_content", content);
+      document.getElementById("ticket-link").href = target.toString();
+
+      const body = JSON.stringify({
+        type: "ticket_click",
+        deviceId,
+        referrer: document.referrer,
+        meta: {
+          source,
+          medium,
+          campaign,
+          content,
+          page: "vinovnalishow.ru",
+          path: `${location.pathname}${location.search}`,
+          label: "Купить билет · партнёрский переход",
+          element: "redirect",
+          target: target.toString(),
+        },
+      });
+      try {
+        navigator.sendBeacon(`${API}/api/events`, new Blob([body], { type: "text/plain;charset=UTF-8" }));
+      } catch {
+        fetch(`${API}/api/events`, { method: "POST", body, keepalive: true }).catch(() => {});
+      }
+      setTimeout(() => location.replace(target.toString()), 120);
+    })();
+  </script>
+</body>
+</html>
