@@ -15,6 +15,23 @@ menuButton?.addEventListener("click", () => {
   menu.classList.toggle("is-open", !isOpen);
 });
 
+menu?.querySelectorAll('a[href^="#"]').forEach((link) => {
+  link.addEventListener("click", (event) => {
+    const target = document.querySelector(link.getAttribute("href"));
+    if (!target) return;
+    event.preventDefault();
+    closeMenu();
+    const heading =
+      target.querySelector(".section-heading, .oracle__intro, .event__heading, .join__intro, .statement__intro") ||
+      target;
+    heading.scrollIntoView({
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+      block: "center",
+    });
+    history.pushState(null, "", link.getAttribute("href"));
+  });
+});
+
 if (heroVideo) {
   const isMobile = window.matchMedia("(max-width: 900px)").matches;
   const nextSrc = isMobile ? heroVideo.dataset.mobileSrc : heroVideo.dataset.desktopSrc;
@@ -87,6 +104,16 @@ const LEAD_COPY = {
     kicker: "Информационная поддержка",
     title: "Связаться",
     hint: "Расскажите, чем можете помочь с публикациями и распространением.",
+  },
+  media: {
+    kicker: "Информационная поддержка",
+    title: "Связаться • СМИ",
+    hint: "Расскажите о вашем издании, площадке или формате публикации.",
+  },
+  ambassador: {
+    kicker: "Программа Амбассадор",
+    title: "Связаться • Амбассадор",
+    hint: "Оставьте контакты — расскажем об условиях программы.",
   },
   vip: {
     kicker: "VIP-ложа",
