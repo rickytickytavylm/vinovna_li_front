@@ -610,6 +610,7 @@ footer { background: var(--ink); color: var(--paper); display: grid; grid-templa
 footer a { text-decoration: underline; text-underline-offset: 3px; }
 footer p, footer small { font-size: 10px; font-weight: 400; letter-spacing: .07em; line-height: 1.6; margin: 0; }
 .footer-meta { align-items: flex-end; display: flex; justify-content: space-between; gap: 20px; min-width: 0; }
+.footer-dev { display: inline-block; margin-top: 8px; }
 .back-to-top {
   align-items: center;
   border: 1px solid rgba(248, 244, 237, .5);
